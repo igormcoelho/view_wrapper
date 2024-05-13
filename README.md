@@ -48,6 +48,7 @@ This library assumes the following:
 - classes do not accept possibly dangling `const T&` types (only `T&`... it can be annoying, but it's better than just crashing due to simple mistakes)
 - We created a `subvector` class to represent read-write situations for `std::vector`
     * The `subvector` allows dynamic bounds to reflect write changes on *origin*
+    * `subvector` is C++14 compatible, but works best with C++20 to allow `std::span` and range concepts
 - This library is header-only: just copy it into your project!
 - This project requires C++20 standard, so for C++17 alternative for simpler situations, see [Optional View project](https://github.com/igormcoelho/optional_view)
 

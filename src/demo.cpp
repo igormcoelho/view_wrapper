@@ -1,9 +1,6 @@
 // SPDX-License-Identifier:  MIT
 // Copyright (C) 2024 - https://github.com/igormcoelho/view_wrapper
 
-// SPDX-License-Identifier:  MIT
-// Copyright (C) 2024 - CrossPP - https://github.com/igormcoelho/crosspp
-
 #include <concepts>
 #include <iostream>
 #include <optional>

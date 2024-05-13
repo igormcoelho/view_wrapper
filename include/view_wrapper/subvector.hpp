@@ -24,8 +24,12 @@ namespace view_wrapper {
 // std::ranges::view_interface<Subvector<T, A> ?
 // nothing special, just to make it 'more range' perhaps...
 
+// #if defined(__cpp_lib_ranges) && (__cpp_lib_ranges >= 201911L)
+// class subvector : public std::ranges::view_interface<subvector<T, A>> {
+// #endif
+
 template <typename T, typename A = std::allocator<T>>
-class subvector : public std::ranges::view_interface<subvector<T, A>> {
+class subvector {
  public:
   using value_type = T;
   using allocator_type = A;
@@ -93,10 +97,12 @@ class subvector : public std::ranges::view_interface<subvector<T, A>> {
     thisConstless.idxEnd = p.second;
   }
 
+#if defined(__cpp_lib_span) && (__cpp_lib_span >= 202002L)
   // basic helper: can be removed if necessary...
   std::span<T> to_view() {
     return std::span<T>{remote->begin() + idxBegin, remote->begin() + idxEnd};
   }
+#endif
 
   size_type size() const {
     if (refreshOnSize) refresh();
@@ -166,13 +172,15 @@ class subvector : public std::ranges::view_interface<subvector<T, A>> {
   // TODO: cbegin, cend, rbegin, rend, crbegin, crend, ...
 };
 
-// basic tests...
+// Check if C++20 Concepts is supported
+#if defined(__cpp_concepts) && (__cpp_concepts >= 201907L)
 static_assert(std::movable<subvector<int>>);
 static_assert(std::copyable<subvector<int>>);
 static_assert(std::ranges::contiguous_range<subvector<int>>);
 static_assert(std::ranges::sized_range<subvector<int>>);
 static_assert(std::ranges::random_access_range<subvector<int>>);
 static_assert(std::ranges::viewable_range<subvector<int>>);
+#endif
 
 }  // namespace view_wrapper
 
