@@ -133,39 +133,34 @@ class subvector {
 
   void push_back(const T& val) { emplace_back(std::move(val)); }
 
-  template <typename... TArgs>
-  auto emplace_back(TArgs&&... args_build) {
+  template <typename... XArgs>
+  auto emplace_back(XArgs&&... args_build) {
     if (refreshBeforePushPop) refresh();
     auto it = remote->begin() + idxEnd;
-    auto vx = remote->emplace(it, std::forward<TArgs>(args_build)...);
     idxEnd++;
-    return vx;
+    return remote->emplace(it, std::forward<XArgs>(args_build)...);
   }
 
-  template <typename... TArgs>
-  auto emplace(iterator it, TArgs&&... args_build) {
+  template <typename... XArgs>
+  auto emplace(iterator it, XArgs&&... args_build) {
     idxEnd++;
-    it = remote->emplace(it, std::forward<TArgs>(args_build)...);
-    return it;
+    return remote->emplace(it, std::forward<XArgs>(args_build)...);
   }
 
   iterator insert(const_iterator pos, const T& value) {
-    auto it = remote->insert(pos, value);
     idxEnd++;
-    return it;
+    return remote->insert(pos, value);
   }
 
   auto erase(iterator it) noexcept {
-    it = remote->erase(it);
     idxEnd--;
-    return it;
+    return remote->erase(it);
   }
 
   auto erase(iterator it_start, const iterator& it_end) noexcept {
     const size_t count = std::distance(it_start, it_end);
     idxEnd -= count;
-    it_start = remote->erase(it_start, it_end);
-    return it_start;
+    return remote->erase(it_start, it_end);
   }
 
   void pop_back() noexcept {
