@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION 3.27)
+project(my-project LANGUAGES CXX VERSION 0.0.1)
+set (CMAKE_CXX_STANDARD 20)
+set (CMAKE_CXX_STANDARD_REQUIRED ON)
+set (CMAKE_CXX_EXTENSIONS OFF)
+set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
+Include(FetchContent)
+set(SOURCES
+)
+add_executable(demo src/demo.cpp ${SOURCES})
+add_executable(test_view tests/test_view.cpp ${SOURCES})
+add_library(my_headers0 INTERFACE)
+target_include_directories(my_headers0 INTERFACE include)
+target_link_libraries(demo PRIVATE my_headers0)
+target_link_libraries(test_view PRIVATE my_headers0)
+# begin dependencies from cxxdeps.txt
+# cxxdeps dependency Catch2
+FetchContent_Declare(Catch2 GIT_REPOSITORY https://github.com/catchorg/Catch2.git GIT_TAG v3.3.1)
+FetchContent_MakeAvailable(Catch2)
+target_link_libraries(test_view PRIVATE Catch2::Catch2WithMain)
