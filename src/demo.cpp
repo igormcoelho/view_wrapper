@@ -1,6 +1,7 @@
 // SPDX-License-Identifier:  MIT
 // Copyright (C) 2024 - https://github.com/igormcoelho/view_wrapper
 
+#include <cassert>
 #include <concepts>
 #include <iostream>
 #include <optional>
@@ -199,6 +200,10 @@ int main(int argc, char* argv[]) {
     assert(subv1->size() == v.size());
     std::cout << "print list: sz=" << subv1->size() << std::endl;
     for (auto& x : *subv1) std::cout << x << std::endl;
+
+    // print as range
+    std::cout << "print (as RANGE) list: sz=" << subv1->size() << std::endl;
+    for (auto& x : subv1) std::cout << x << std::endl;
 
     // to_span
     std::cout << "print list: SPAN sz=" << subv1->to_view().size() << std::endl;

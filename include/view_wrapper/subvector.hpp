@@ -9,14 +9,21 @@
 //   => std::ranges::sized_range
 //   => std::ranges::random_access_range
 
-#include <cassert>
+// #include <cassert>
+//
 #include <concepts>
 #include <functional>
 #include <memory>
-#include <ranges>
-#include <span>
 #include <utility>
 #include <vector>
+
+#if defined(__cpp_lib_ranges) && (__cpp_lib_ranges >= 201911L)
+#include <ranges>
+#endif
+
+#if defined(__cpp_lib_span) && (__cpp_lib_span >= 202002L)
+#include <span>
+#endif
 
 namespace view_wrapper {
 
@@ -71,9 +78,9 @@ class subvector {
   // fixed-range of vector in format [closed, open)
   subvector(std::vector<T, A>& _remote, size_type _idxBegin, size_type _idxEnd)
       : remote{&_remote}, idxBegin{_idxBegin}, idxEnd{_idxEnd} {
-    assert(idxBegin >= 0);
-    assert(idxBegin <= idxEnd);
-    assert(idxEnd <= remote->size());
+    // assert(idxBegin >= 0);
+    // assert(idxBegin <= idxEnd);
+    // assert(idxEnd <= remote->size());
   }
 
   // dynamic-range of vector
@@ -119,6 +126,8 @@ class subvector {
   // implements iterators from view!!!
   iterator begin() { return remote->begin() + idxBegin; }
   iterator end() { return remote->begin() + idxEnd; }
+  const_iterator begin() const { return remote->begin() + idxBegin; }
+  const_iterator end() const { return remote->begin() + idxEnd; }
 
   void push_back(T&& val) { emplace_back(std::move(val)); }
 

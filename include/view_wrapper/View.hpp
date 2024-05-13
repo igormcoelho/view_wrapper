@@ -7,7 +7,6 @@
 // View<> is a wrapper for safer use of view types in C++
 
 #include <concepts>
-#include <iostream>
 #include <optional>
 #include <span>
 #include <string>
@@ -32,13 +31,25 @@ namespace view_wrapper {
 // std::movable and std::copiable
 // =================================================
 
+template <typename Self>
+concept IsView = requires(Self s) {
+  { s.as_copy() };
+  { s.as_view() };
+  typename Self::value_type;
+  typename Self::view_type;
+};
+
 template <typename T>
 class View;
 
 template <>
 class View<std::string> {
- public:
+ private:
   std::optional<std::string_view> sv;
+
+ public:
+  using value_type = std::string;
+  using view_type = std::string_view;
 
   // no copy (perhaps?)
   // View(const View& v) = delete;
@@ -51,28 +62,13 @@ class View<std::string> {
   // private:
   // explicit View(const std::string& s) : std::string_view{s} {
   // DO NOT ACCEPT 'const string&' HERE! IT MAY DANGLE!
-  explicit View(std::string& s) : sv{s} {
-    // std::cout << "CONSTRUCT View" << std::endl;
-  }
+  explicit View(std::string& s) : sv{s} {}
 
-  explicit View(std::string_view& s) : sv{s} {
-    // std::cout << "CONSTRUCT View" << std::endl;
-  }
+  explicit View(std::string_view& s) : sv{s} {}
 
-  void show() { std::cout << "View for strings\n"; }
+  const std::string_view& as_view() { return *sv; }
 
-  const std::string_view& as_view() {
-    std::cout << "printing as_string_view from " << this << std::endl;
-
-    // return std::string_view(*this);
-    // return std::string_view(sv);
-    return *sv;
-  }
-
-  std::string as_copy() {
-    // return std::string(*this);
-    return std::string(*sv);
-  }
+  std::string as_copy() { return std::string(*sv); }
 
   // no assign (perhaps?)
   // View<std::string>& operator=(const View<std::string>& other) = delete;
@@ -109,12 +105,18 @@ static_assert(std::copyable<View<std::string>>);
 // Example: string_view is copyable.
 static_assert(std::copyable<std::string_view>);
 
+static_assert(IsView<View<std::string>>);
+
 // VECTOR PART!
 
 template <typename X>
 class View<std::vector<X>> {
- public:
+ private:
   std::optional<std::span<X>> sv;
+
+ public:
+  using value_type = std::vector<X>;
+  using view_type = std::span<X>;
 
   // no copy (perhaps?)
   // View(const View& v) = delete;
@@ -127,28 +129,13 @@ class View<std::vector<X>> {
   // private:
   // explicit View(const std::string& s) : std::string_view{s} {
   // DO NOT ACCEPT 'const string&' HERE! IT MAY DANGLE!
-  explicit View(std::vector<X>& s) : sv{s} {
-    // std::cout << "CONSTRUCT View" << std::endl;
-  }
+  explicit View(std::vector<X>& s) : sv{s} {}
 
-  explicit View(std::span<X>& s) : sv{s} {
-    // std::cout << "CONSTRUCT View" << std::endl;
-  }
+  explicit View(std::span<X>& s) : sv{s} {}
 
-  void show() { std::cout << "View for vector\n"; }
+  std::span<X>& as_view() { return *sv; }
 
-  std::span<X>& as_view() {
-    std::cout << "printing as_string_view from " << this << std::endl;
-
-    // return std::string_view(*this);
-    // return std::string_view(sv);
-    return *sv;
-  }
-
-  std::vector<X> as_copy() {
-    // return std::string(*this);
-    return std::vector<X>(*sv);
-  }
+  std::vector<X> as_copy() { return std::vector<X>(*sv); }
 
   // no assign (perhaps?)
   // View<std::string>& operator=(const View<std::string>& other) = delete;
@@ -167,6 +154,8 @@ class View<std::vector<X>> {
   const std::span<X>& operator*() { return *sv; }
   const std::span<X>* operator->() { return &(*sv); }
 };
+
+static_assert(IsView<View<std::vector<int>>>);
 
 }  // namespace view_wrapper
 

@@ -6,12 +6,7 @@
 
 // Range<> is a wrapper for safer use of range types in C++
 
-#include <concepts>
-#include <iostream>
 #include <optional>
-#include <span>
-#include <string>
-#include <string_view>
 #include <utility>
 #include <vector>
 //
@@ -21,13 +16,26 @@
 
 namespace view_wrapper {
 
+template <typename Self>
+concept IsRange = requires(Self s) {
+  { s.as_copy() };
+  { s.as_range() };
+  typename Self::value_type;
+  typename Self::range_type;
+};
+
 template <typename T>
 class Range;
 
 template <typename X>
-class Range<std::vector<X>> {
- public:
+class Range<std::vector<X>>
+    : public std::ranges::view_interface<Range<std::vector<X>>> {
+ private:
   std::optional<subvector<X>> sv;
+
+ public:
+  using value_type = std::vector<X>;
+  using range_type = subvector<X>;
 
   // no copy (perhaps?)
   // View(const View& v) = delete;
@@ -40,28 +48,16 @@ class Range<std::vector<X>> {
   // private:
   // explicit View(const std::string& s) : std::string_view{s} {
   // DO NOT ACCEPT 'const string&' HERE! IT MAY DANGLE!
-  explicit Range(std::vector<X>& s) : sv{s} {
-    // std::cout << "CONSTRUCT View" << std::endl;
-  }
+  explicit Range(std::vector<X>& s) : sv{s} {}
 
-  explicit Range(subvector<X>& s) : sv{s} {
-    // std::cout << "CONSTRUCT View" << std::endl;
-  }
+  explicit Range(subvector<X>& s) : sv{s} {}
 
-  void show() { std::cout << "Range for vector\n"; }
+  auto begin() const { return sv->begin(); }
+  auto end() const { return sv->end(); }
 
-  subvector<X>& as_range() {
-    std::cout << "printing as_range from " << this << std::endl;
+  subvector<X>& as_range() { return *sv; }
 
-    // return std::string_view(*this);
-    // return std::string_view(sv);
-    return *sv;
-  }
-
-  std::vector<X> as_copy() {
-    // return std::string(*this);
-    return std::vector<X>(*sv);
-  }
+  std::vector<X> as_copy() { return std::vector<X>(*sv); }
 
   // no assign (perhaps?)
   // View<std::string>& operator=(const View<std::string>& other) = delete;
@@ -80,6 +76,9 @@ class Range<std::vector<X>> {
   subvector<X>& operator*() { return *sv; }
   subvector<X>* operator->() { return &(*sv); }
 };
+
+static_assert(IsRange<Range<std::vector<int>>>);
+static_assert(std::ranges::viewable_range<Range<std::vector<int>>>);
 
 }  // namespace view_wrapper
 
