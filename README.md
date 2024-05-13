@@ -6,7 +6,7 @@ A reasonably safe header-only C++20 library for view and range containers in C++
 This library is about **views**, which are immutable and lightweight value-types with *reference-type semantics* (behaving *like* a reference),
 that allow *remote* manipulation of heavier objects.
 
-Several advances in C++ language, including C++20 ranges library, 
+Several advances in C++ language, including [C++20 ranges library](https://en.cppreference.com/w/cpp/ranges), 
 have drastically improved the efficiency of previous iterative processes.
 However, it's tricky for newcomers to understand and to correctly use these
 features.
