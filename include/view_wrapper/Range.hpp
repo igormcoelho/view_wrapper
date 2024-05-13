@@ -15,7 +15,7 @@
 #include <utility>
 #include <vector>
 //
-#include "./Subvector.hpp"
+#include "./subvector.hpp"
 
 // TODO: inherit from https://en.cppreference.com/w/cpp/ranges/view_interface
 
@@ -27,7 +27,7 @@ class Range;
 template <typename X>
 class Range<std::vector<X>> {
  public:
-  std::optional<Subvector<X>> sv;
+  std::optional<subvector<X>> sv;
 
   // no copy (perhaps?)
   // View(const View& v) = delete;
@@ -44,13 +44,13 @@ class Range<std::vector<X>> {
     // std::cout << "CONSTRUCT View" << std::endl;
   }
 
-  explicit Range(Subvector<X>& s) : sv{s} {
+  explicit Range(subvector<X>& s) : sv{s} {
     // std::cout << "CONSTRUCT View" << std::endl;
   }
 
   void show() { std::cout << "Range for vector\n"; }
 
-  Subvector<X>& as_range() {
+  subvector<X>& as_range() {
     std::cout << "printing as_range from " << this << std::endl;
 
     // return std::string_view(*this);
@@ -77,8 +77,8 @@ class Range<std::vector<X>> {
     return *this;
   }
 
-  Subvector<X>& operator*() { return *sv; }
-  Subvector<X>* operator->() { return &(*sv); }
+  subvector<X>& operator*() { return *sv; }
+  subvector<X>* operator->() { return &(*sv); }
 };
 
 }  // namespace view_wrapper

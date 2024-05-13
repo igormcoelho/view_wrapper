@@ -13,11 +13,11 @@
 #include <vector>
 //
 #include <view_wrapper/Range.hpp>
-#include <view_wrapper/Subvector.hpp>
 #include <view_wrapper/View.hpp>
+#include <view_wrapper/subvector.hpp>
 
 using view_wrapper::Range;
-using view_wrapper::Subvector;
+using view_wrapper::subvector;
 using view_wrapper::View;
 
 int f(View<std::string>& v) {
@@ -130,17 +130,17 @@ int main(int argc, char* argv[]) {
     std::cout << "print list: sz=" << v.size() << std::endl;
     for (auto& x : v) std::cout << x << std::endl;
 
-    Subvector<int> subv1(v);
+    subvector<int> subv1(v);
     std::cout << "print list: sz=" << subv1.size() << std::endl;
     assert(subv1.size() == v.size());
     for (auto& x : subv1) std::cout << x << std::endl;
 
-    Subvector<int> subv2(v, 2, v.size());
+    subvector<int> subv2(v, 2, v.size());
     std::cout << "print list: sz=" << subv2.size() << std::endl;
     assert(subv2.size() == v.size() - 2);
     for (auto& x : subv2) std::cout << x << std::endl;
 
-    Subvector<int> subv3(v, 2, 3);
+    subvector<int> subv3(v, 2, 3);
     std::cout << "print list: sz=" << subv3.size() << std::endl;
     assert(subv3.size() == 1);
     for (auto& x : subv3) std::cout << x << std::endl;
@@ -207,15 +207,15 @@ int main(int argc, char* argv[]) {
     std::cout << "print list: SPAN sz=" << subv1->to_view().size() << std::endl;
     for (auto& x : subv1->to_view()) std::cout << x << std::endl;
 
-    // ======= vector<Subvector> =======
+    // ======= vector<subvector> =======
 
     std::vector<std::vector<int>> vv;
     for (int i = 0; i < 5; i++) vv.push_back(v);  // copy 5 times
 
     std::cout << "check full bounds" << std::endl;
     {
-      std::vector<Subvector<int>> vv2;
-      for (auto& v : vv) vv2.push_back(Subvector<int>(v));
+      std::vector<subvector<int>> vv2;
+      for (auto& v : vv) vv2.push_back(subvector<int>(v));
       vv[0].push_back(-1);
 
       for (auto& v : vv2) std::cout << "size v -> " << v.size() << std::endl;

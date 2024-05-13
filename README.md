@@ -18,7 +18,7 @@ Can we write into its elements? No, it's read only.
 Can we build one based on a dangling value and return it on a method? 
 Yes, unfortunately, and this will generate issues that are hard to trace.
 - `std::span` is a view to many range-based types, including arrays, vectors, etc.
-Can we write into its elements? Yes, differently from a `string_view`, although we cannot *insert* new elements in the middle (that's why we developed [Subvector.hpp](./include/view_wrapper/Subvector.hpp))
+Can we write into its elements? Yes, differently from a `string_view`, although we cannot *insert* new elements in the middle (that's why we developed [subvector.hpp](./include/view_wrapper/subvector.hpp))
 
 These two major classes already cause some confusions, 
 and when we think on dozens of range and iterator implementations... 
@@ -44,7 +44,7 @@ This library assumes the following:
 - Views are nullable
    * this requirement was put in order to allow them to be compatible with stl container, e.g., `std::movable` and `std::copyable`
 - Ranges are read-write and immutable on its *origins* (cannot change the *reference to the pointed/remote object* but can change *content* within the range)
-- classes `View<>`, `Range<>` and `Subvector<>` are namespaced on `view_wrapper` and are CamelCase just to prevent name confusions with similar stl classes
+- classes `View<>` and `Range<>` are namespaced on `view_wrapper` and are CamelCase just to prevent name confusions with similar stl classes
 - classes do not accept possibly dangling `const T&` types (only `T&`... it can be annoying, but it's better than just crashing due to simple mistakes)
 - We created a `subvector` class to represent read-write situations for `std::vector`
 - This library is header-only: just copy it into your project!
@@ -56,7 +56,7 @@ Just play with `View<std::string>`, `View<std::vector<int>>` and `Range<std::vec
 
 See `src/demo.cpp` and files [include/view_wrapper/View.hpp](./include/view_wrapper/View.hpp) and [include/view_wrapper/Range.hpp](./include/view_wrapper/Range.hpp).
 
-Also, play with Subvector: [include/view_wrapper/Subvector.hpp](./include/view_wrapper/Subvector.hpp)
+Also, play with subvector: [include/view_wrapper/subvector.hpp](./include/view_wrapper/subvector.hpp)
 
 To build it, just type:
 

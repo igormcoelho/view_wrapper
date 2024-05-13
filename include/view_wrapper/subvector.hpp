@@ -25,7 +25,7 @@ namespace view_wrapper {
 // nothing special, just to make it 'more range' perhaps...
 
 template <typename T, typename A = std::allocator<T>>
-class Subvector : public std::ranges::view_interface<Subvector<T, A>> {
+class subvector : public std::ranges::view_interface<subvector<T, A>> {
  public:
   using value_type = T;
   using allocator_type = A;
@@ -54,7 +54,7 @@ class Subvector : public std::ranges::view_interface<Subvector<T, A>> {
 
  public:
   // full vector: dynamic bounds [0, size)
-  explicit Subvector(std::vector<T, A>& _remote)
+  explicit subvector(std::vector<T, A>& _remote)
       : remote{&_remote}, refreshOnSize{true}, refreshBeforePushPop{true} {
     fBounds =
         [](const std::vector<T, A>& vr) -> std::pair<size_type, size_type> {
@@ -65,7 +65,7 @@ class Subvector : public std::ranges::view_interface<Subvector<T, A>> {
   }
 
   // fixed-range of vector in format [closed, open)
-  Subvector(std::vector<T, A>& _remote, size_type _idxBegin, size_type _idxEnd)
+  subvector(std::vector<T, A>& _remote, size_type _idxBegin, size_type _idxEnd)
       : remote{&_remote}, idxBegin{_idxBegin}, idxEnd{_idxEnd} {
     assert(idxBegin >= 0);
     assert(idxBegin <= idxEnd);
@@ -73,7 +73,7 @@ class Subvector : public std::ranges::view_interface<Subvector<T, A>> {
   }
 
   // dynamic-range of vector
-  Subvector(std::vector<T, A>& _remote, fBoundsType _fBounds,
+  subvector(std::vector<T, A>& _remote, fBoundsType _fBounds,
             bool _refreshOnSize = true, bool _refreshBeforePushPop = true)
       : remote{&_remote},
         fBounds{_fBounds},
@@ -88,7 +88,7 @@ class Subvector : public std::ranges::view_interface<Subvector<T, A>> {
 
   void refresh() const {
     auto p = fBounds(*remote);
-    auto& thisConstless = const_cast<Subvector<T, A>&>(*this);
+    auto& thisConstless = const_cast<subvector<T, A>&>(*this);
     thisConstless.idxBegin = p.first;
     thisConstless.idxEnd = p.second;
   }
@@ -167,12 +167,12 @@ class Subvector : public std::ranges::view_interface<Subvector<T, A>> {
 };
 
 // basic tests...
-static_assert(std::movable<Subvector<int>>);
-static_assert(std::copyable<Subvector<int>>);
-static_assert(std::ranges::contiguous_range<Subvector<int>>);
-static_assert(std::ranges::sized_range<Subvector<int>>);
-static_assert(std::ranges::random_access_range<Subvector<int>>);
-static_assert(std::ranges::viewable_range<Subvector<int>>);
+static_assert(std::movable<subvector<int>>);
+static_assert(std::copyable<subvector<int>>);
+static_assert(std::ranges::contiguous_range<subvector<int>>);
+static_assert(std::ranges::sized_range<subvector<int>>);
+static_assert(std::ranges::random_access_range<subvector<int>>);
+static_assert(std::ranges::viewable_range<subvector<int>>);
 
 }  // namespace view_wrapper
 
