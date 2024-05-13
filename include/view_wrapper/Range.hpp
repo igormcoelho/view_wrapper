@@ -4,15 +4,13 @@
 #ifndef VIEW_WRAPPER_RANGE_HPP_
 #define VIEW_WRAPPER_RANGE_HPP_
 
-// Range<> is a wrapper for safer use of range types in C++
+// Range<> is a C++20 wrapper for safer use of range types in C++
 
 #include <optional>
 #include <utility>
 #include <vector>
 //
 #include "./subvector.hpp"
-
-// TODO: inherit from https://en.cppreference.com/w/cpp/ranges/view_interface
 
 namespace view_wrapper {
 

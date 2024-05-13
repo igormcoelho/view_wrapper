@@ -4,10 +4,13 @@
 #ifndef VIEW_WRAPPER_SUBVECTOR_HPP_
 #define VIEW_WRAPPER_SUBVECTOR_HPP_
 
-// Subvector is a vector-compatible range type in C++
-//   => satisfies: std::ranges::contiguous_range
+// Subvector is a C++14 vector-compatible range type in C++
+//
+// It works even better with C++20 concepts and ranges, satisfying:
+//   => std::ranges::contiguous_range
 //   => std::ranges::sized_range
 //   => std::ranges::random_access_range
+//   => std::ranges::viewable_range
 
 // #include <cassert>
 //
