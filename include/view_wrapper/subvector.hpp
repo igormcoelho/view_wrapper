@@ -109,7 +109,7 @@ class subvector {
 
 #if defined(__cpp_lib_span) && (__cpp_lib_span >= 202002L)
   // basic helper: can be removed if necessary...
-  std::span<T> to_view() {
+  std::span<T> as_span() {
     return std::span<T>{remote->begin() + idxBegin, remote->begin() + idxEnd};
   }
 #endif

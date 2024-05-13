@@ -206,8 +206,8 @@ int main(int argc, char* argv[]) {
     for (auto& x : subv1) std::cout << x << std::endl;
 
     // to_span
-    std::cout << "print list: SPAN sz=" << subv1->to_view().size() << std::endl;
-    for (auto& x : subv1->to_view()) std::cout << x << std::endl;
+    std::cout << "print list: SPAN sz=" << subv1->as_span().size() << std::endl;
+    for (auto& x : subv1->as_span()) std::cout << x << std::endl;
 
     // ======= vector<subvector> =======
 
