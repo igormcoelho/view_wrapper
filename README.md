@@ -18,7 +18,7 @@ Can we write into its elements? No, it's read only.
 Can we build one based on a dangling value and return it on a method? 
 Yes, unfortunately, and this will generate issues that are hard to trace.
 - `std::span` is a view to many range-based types, including arrays, vectors, etc.
-Can we write into its elements? Yes, differently from a `string_view`.
+Can we write into its elements? Yes, differently from a `string_view`, although we cannot *insert* new elements in the middle (that's why we developed *Subvector*)
 
 These two major classes already cause some confusions, 
 and when we think on dozens of range and iterator implementations... 
