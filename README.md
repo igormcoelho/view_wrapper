@@ -34,7 +34,7 @@ based on template specialization, so feel free to add any other specialization y
 
 It also covers read-write range types. Example:
 
-- What is a `Range<std::vector> v`? Object `*v` is a `subvector` type, that allows remote changes to occur on the original vector.
+- What is a `Range<std::vector> v`? Object `*v` is a `subvector` type, that allows remote changes to occur on the original vector (including insertions, differently from `std::span`...)
 
 ## Innovations and definitions
 
