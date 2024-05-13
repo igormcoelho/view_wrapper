@@ -203,6 +203,10 @@ int main(int argc, char* argv[]) {
     assert(subv1->size() == v.size());
     std::cout << "print list: sz=" << subv1->size() << std::endl;
     for (auto& x : *subv1) std::cout << x << std::endl;
+
+    // to_span
+    std::cout << "print list: SPAN sz=" << subv1->to_view().size() << std::endl;
+    for (auto& x : subv1->to_view()) std::cout << x << std::endl;
   }
 
   return 0;

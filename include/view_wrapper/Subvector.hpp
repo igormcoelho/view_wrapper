@@ -5,24 +5,26 @@
 #define VIEW_WRAPPER_SUBVECTOR_HPP_
 
 // Subvector is a vector-compatible range type in C++
+//   => satisfies: std::ranges::contiguous_range
+//   => std::ranges::sized_range
+//   => std::ranges::random_access_range
 
 #include <cassert>
 #include <concepts>
-#include <iostream>
 #include <memory>
-#include <optional>
+#include <ranges>
 #include <span>
-#include <string>
-#include <string_view>
 #include <utility>
 #include <vector>
 
-// TODO: inherit from https://en.cppreference.com/w/cpp/ranges/view_interface
-
 namespace view_wrapper {
 
+// What is the advantage of inheriting from:
+// std::ranges::view_interface<Subvector<T, A> ?
+// nothing special, just to make it 'more range' perhaps...
+
 template <typename T, typename A = std::allocator<T>>
-class Subvector {
+class Subvector : public std::ranges::view_interface<Subvector<T, A>> {
  public:
   using value_type = T;
   using allocator_type = A;
@@ -46,6 +48,11 @@ class Subvector {
     assert(idxBegin >= 0);
     assert(idxBegin <= idxEnd);
     assert(idxEnd <= remote->size());
+  }
+
+  // basic helper: can be removed if necessary...
+  std::span<T> to_view() {
+    return std::span<T>{remote->begin() + idxBegin, remote->begin() + idxEnd};
   }
 
   size_type size() const { return idxEnd - idxBegin; }
@@ -110,6 +117,14 @@ class Subvector {
 
   // TODO: cbegin, cend, rbegin, rend, crbegin, crend, ...
 };
+
+// basic tests...
+static_assert(std::movable<Subvector<int>>);
+static_assert(std::copyable<Subvector<int>>);
+static_assert(std::ranges::contiguous_range<Subvector<int>>);
+static_assert(std::ranges::sized_range<Subvector<int>>);
+static_assert(std::ranges::random_access_range<Subvector<int>>);
+static_assert(std::ranges::viewable_range<Subvector<int>>);
 
 }  // namespace view_wrapper
 
