@@ -47,7 +47,8 @@ This library assumes the following:
 - classes `View<>` and `Range<>` are namespaced on `view_wrapper` and are CamelCase just to prevent name confusions with similar stl classes
 - classes do not accept possibly dangling `const T&` types (only `T&`... it can be annoying, but it's better than just crashing due to simple mistakes)
 - We created a `subvector` class to represent read-write situations for `std::vector`
-    * The `subvector` allows dynamic bounds to reflect write changes on *origin*
+    * The `subvector` allows fixed or dynamic bounds to reflect write changes on *origin*
+    * Dynamic bounds can be automatically executed before `size()` and push/pop write methods via constructor flags *refreshOnSize* and *refreshBeforePushPop*; or manually invoking `refresh()`
     * `subvector` is C++14 compatible, but works best with C++20 to allow `std::span` and range concepts
 - This library is header-only: just copy it into your project!
 - This project requires C++20 standard, so for C++17 alternative for simpler situations, see [Optional View project](https://github.com/igormcoelho/optional_view)
