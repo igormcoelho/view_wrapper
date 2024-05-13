@@ -11,6 +11,7 @@
 
 #include <cassert>
 #include <concepts>
+#include <functional>
 #include <memory>
 #include <ranges>
 #include <span>
@@ -36,13 +37,34 @@ class Subvector : public std::ranges::view_interface<Subvector<T, A>> {
   // immutable, but nullable
   std::vector<T, A>* remote{nullptr};
   size_type idxBegin, idxEnd;
+  // cached bounds
+  // std::pair<size_type, size_type> bounds;
+  // dynamic bounds
+  using fBoundsType =
+      std::function<std::pair<size_type, size_type>(const std::vector<T, A>&)>;
+  fBoundsType fBounds;
+  // === refresh bounds strategies ===
+  // 0. must refresh on size() call
+  bool refreshOnSize{false};
+  // 1. must refresh before push/pop write operation
+  //   => middle iterator-based 'emplace', 'insert', 'erase', not included...
+  //      otherwise, they would be doubly executed on push_back, pop_front!
+  //      another reason is that users can manually invoke 'refresh' if needed!
+  bool refreshBeforePushPop{false};
 
  public:
-  // full vector
+  // full vector: dynamic bounds [0, size)
   explicit Subvector(std::vector<T, A>& _remote)
-      : remote{&_remote}, idxBegin{0}, idxEnd{_remote.size()} {}
+      : remote{&_remote}, refreshOnSize{true}, refreshBeforePushPop{true} {
+    fBounds =
+        [](const std::vector<T, A>& vr) -> std::pair<size_type, size_type> {
+      return std::make_pair(0, vr.size());
+    };
+    // invoke dynamic bounds function
+    refresh();
+  }
 
-  // range of vector in format [closed, open)
+  // fixed-range of vector in format [closed, open)
   Subvector(std::vector<T, A>& _remote, size_type _idxBegin, size_type _idxEnd)
       : remote{&_remote}, idxBegin{_idxBegin}, idxEnd{_idxEnd} {
     assert(idxBegin >= 0);
@@ -50,12 +72,36 @@ class Subvector : public std::ranges::view_interface<Subvector<T, A>> {
     assert(idxEnd <= remote->size());
   }
 
+  // dynamic-range of vector
+  Subvector(std::vector<T, A>& _remote, fBoundsType _fBounds,
+            bool _refreshOnSize = true, bool _refreshBeforePushPop = true)
+      : remote{&_remote},
+        fBounds{_fBounds},
+        refreshOnSize{_refreshOnSize},
+        refreshBeforePushPop{_refreshBeforePushPop} {
+    // invoke dynamic bounds function
+    refresh();
+    assert(idxBegin >= 0);
+    assert(idxBegin <= idxEnd);
+    assert(idxEnd <= remote->size());
+  }
+
+  void refresh() const {
+    auto p = fBounds(*remote);
+    auto& thisConstless = const_cast<Subvector<T, A>&>(*this);
+    thisConstless.idxBegin = p.first;
+    thisConstless.idxEnd = p.second;
+  }
+
   // basic helper: can be removed if necessary...
   std::span<T> to_view() {
     return std::span<T>{remote->begin() + idxBegin, remote->begin() + idxEnd};
   }
 
-  size_type size() const { return idxEnd - idxBegin; }
+  size_type size() const {
+    if (refreshOnSize) refresh();
+    return idxEnd - idxBegin;
+  }
   bool empty() const { return size() == 0; }
 
   T& operator[](size_type idx) { return *(remote->begin() + idxBegin + idx); }
@@ -74,6 +120,7 @@ class Subvector : public std::ranges::view_interface<Subvector<T, A>> {
 
   template <typename... TArgs>
   auto emplace_back(TArgs&&... args_build) {
+    if (refreshBeforePushPop) refresh();
     auto it = remote->begin() + idxEnd;
     auto vx = remote->emplace(it, std::forward<TArgs>(args_build)...);
     idxEnd++;
@@ -107,6 +154,7 @@ class Subvector : public std::ranges::view_interface<Subvector<T, A>> {
   }
 
   void pop_back() noexcept {
+    if (refreshBeforePushPop) refresh();
     remote->erase(remote->begin() + idxEnd);
     idxEnd--;
   }

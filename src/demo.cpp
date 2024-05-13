@@ -131,27 +131,26 @@ int main(int argc, char* argv[]) {
     for (auto& x : v) std::cout << x << std::endl;
 
     Subvector<int> subv1(v);
-    assert(subv1.size() == v.size());
     std::cout << "print list: sz=" << subv1.size() << std::endl;
+    assert(subv1.size() == v.size());
     for (auto& x : subv1) std::cout << x << std::endl;
 
     Subvector<int> subv2(v, 2, v.size());
-    assert(subv2.size() == v.size() - 2);
     std::cout << "print list: sz=" << subv2.size() << std::endl;
+    assert(subv2.size() == v.size() - 2);
     for (auto& x : subv2) std::cout << x << std::endl;
 
     Subvector<int> subv3(v, 2, 3);
-    assert(subv3.size() == 1);
     std::cout << "print list: sz=" << subv3.size() << std::endl;
+    assert(subv3.size() == 1);
     for (auto& x : subv3) std::cout << x << std::endl;
 
     // Subvector<int> subv4(v, 2, v.size() + 1);
     // ERROR!
 
     subv3.push_back(30);
-    assert(subv1.size() == v.size() - 1);
-
     std::cout << "print list: sz=" << v.size() << std::endl;
+    assert(subv1.size() == v.size());
     for (auto& x : v) std::cout << x << std::endl;
 
     std::cout << "print list: sz=" << subv3.size() << std::endl;
@@ -160,18 +159,18 @@ int main(int argc, char* argv[]) {
 
     std::cout << "add -1 on begin" << std::endl;
     subv1.insert(subv1.begin(), -1);
-    assert(subv1.size() == v.size() - 1);
+    assert(subv1.size() == v.size());
 
     std::cout << "print list: sz=" << v.size() << std::endl;
     for (auto& x : v) std::cout << x << std::endl;
 
     std::cout << "print list: sz=" << subv1.size() << std::endl;
+    assert(subv1.size() == v.size());
     for (auto& x : subv1) std::cout << x << std::endl;
-    assert(subv1.size() == v.size() - 1);
 
     std::cout << "print list: sz=" << subv3.size() << std::endl;
-    for (auto& x : subv3) std::cout << x << std::endl;
     assert(subv3.size() == 2);
+    for (auto& x : subv3) std::cout << x << std::endl;
     assert(subv3[0] == 2);
     assert(subv3[1] == 3);
 
@@ -207,6 +206,20 @@ int main(int argc, char* argv[]) {
     // to_span
     std::cout << "print list: SPAN sz=" << subv1->to_view().size() << std::endl;
     for (auto& x : subv1->to_view()) std::cout << x << std::endl;
+
+    // ======= vector<Subvector> =======
+
+    std::vector<std::vector<int>> vv;
+    for (int i = 0; i < 5; i++) vv.push_back(v);  // copy 5 times
+
+    std::cout << "check full bounds" << std::endl;
+    {
+      std::vector<Subvector<int>> vv2;
+      for (auto& v : vv) vv2.push_back(Subvector<int>(v));
+      vv[0].push_back(-1);
+
+      for (auto& v : vv2) std::cout << "size v -> " << v.size() << std::endl;
+    }
   }
 
   return 0;
