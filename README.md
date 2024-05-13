@@ -43,7 +43,7 @@ This library assumes the following:
 - Views are immutable and read-only
 - Views are nullable
    * this requirement was put in order to allow them to be compatible with stl container, e.g., `std::movable` and `std::copyable`
-- Ranges are read-write and immutable on its *origins* (cannot change the *reference to the pointed/remote object*)
+- Ranges are read-write and immutable on its *origins* (cannot change the *reference to the pointed/remote object* but can change *content* within the range)
 - classes `View<>`, `Range<>` and `Subvector<>` are namespaced on `view_wrapper` and are CamelCase just to prevent name confusions with similar stl classes
 - classes do not accept possibly dangling `const T&` types (only `T&`... it can be annoying, but it's better than just crashing due to simple mistakes)
 - We created a `subvector` class to represent read-write situations for `std::vector`
