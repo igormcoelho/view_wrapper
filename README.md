@@ -1,7 +1,7 @@
 # view_wrapper
-A reasonably safe C++20 library for view and range containers in C++
+A reasonably safe header-only C++20 library for view and range containers in C++
 
-## What do I need this library?
+## Do I need this library?
 
 This library is about **views**, which are **immutable** and lightweight types,
 that allow *remote* manipulation of heavier objects.
@@ -45,12 +45,18 @@ This library assumes the following:
    * this requirement was put in order to allow them to be compatible with stl container, e.g., `std::movable` and `std::copyable`
 - Ranges are read-write and immutable on its *origins* (cannot change the *reference to the pointed/remote object*)
 - classes `View<>`, `Range<>` and `Subvector<>` are namespaced on `view_wrapper` and are CamelCase just to prevent name confusions with similar stl classes
+- classes do not accept possibly dangling `const T&` types (only `T&`... it can be annoying, but it's better than just crashing due to simple mistakes)
 - We created a `subvector` class to represent read-write situations for `std::vector`
+- This library is header-only: just copy it into your project!
 - This project requires C++20 standard, so for C++17 alternative for simpler situations, see [Optional View project](https://github.com/igormcoelho/optional_view)
 
 ## Demo
 
-See `src/demo.cpp` and files `include/view_wrapper/View.hpp` and `include/view_wrapper/Subvector.hpp` 
+Just play with `View<std::string>`, `View<std::vector<int>>` and `Range<std::vector<int>>`!
+
+See `src/demo.cpp` and files `include/view_wrapper/View.hpp` and `include/view_wrapper/Range.hpp`.
+
+Also, play with Subvector: `include/view_wrapper/Subvector.hpp` 
 
 To build it, just type:
 

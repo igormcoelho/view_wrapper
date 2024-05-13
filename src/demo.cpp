@@ -12,8 +12,12 @@
 #include <string_view>
 #include <vector>
 //
+#include <view_wrapper/Range.hpp>
+#include <view_wrapper/Subvector.hpp>
 #include <view_wrapper/View.hpp>
 
+using view_wrapper::Range;
+using view_wrapper::Subvector;
 using view_wrapper::View;
 
 int f(View<std::string>& v) {
@@ -116,6 +120,90 @@ int main(int argc, char* argv[]) {
   std::string_view vv("oi");
 
   std::cout << vv << std::endl;
+
+  // ============= Subvector
+
+  {
+    std::cout << "trying subvector..." << std::endl;
+
+    std::vector<int> v = {1, 2, 3, 4, 5, 6};
+    std::cout << "print list: sz=" << v.size() << std::endl;
+    for (auto& x : v) std::cout << x << std::endl;
+
+    Subvector<int> subv1(v);
+    assert(subv1.size() == v.size());
+    std::cout << "print list: sz=" << subv1.size() << std::endl;
+    for (auto& x : subv1) std::cout << x << std::endl;
+
+    Subvector<int> subv2(v, 2, v.size());
+    assert(subv2.size() == v.size() - 2);
+    std::cout << "print list: sz=" << subv2.size() << std::endl;
+    for (auto& x : subv2) std::cout << x << std::endl;
+
+    Subvector<int> subv3(v, 2, 3);
+    assert(subv3.size() == 1);
+    std::cout << "print list: sz=" << subv3.size() << std::endl;
+    for (auto& x : subv3) std::cout << x << std::endl;
+
+    // Subvector<int> subv4(v, 2, v.size() + 1);
+    // ERROR!
+
+    subv3.push_back(30);
+    assert(subv1.size() == v.size() - 1);
+
+    std::cout << "print list: sz=" << v.size() << std::endl;
+    for (auto& x : v) std::cout << x << std::endl;
+
+    std::cout << "print list: sz=" << subv3.size() << std::endl;
+    assert(subv3.size() == 2);
+    for (auto& x : subv3) std::cout << x << std::endl;
+
+    std::cout << "add -1 on begin" << std::endl;
+    subv1.insert(subv1.begin(), -1);
+    assert(subv1.size() == v.size() - 1);
+
+    std::cout << "print list: sz=" << v.size() << std::endl;
+    for (auto& x : v) std::cout << x << std::endl;
+
+    std::cout << "print list: sz=" << subv1.size() << std::endl;
+    for (auto& x : subv1) std::cout << x << std::endl;
+    assert(subv1.size() == v.size() - 1);
+
+    std::cout << "print list: sz=" << subv3.size() << std::endl;
+    for (auto& x : subv3) std::cout << x << std::endl;
+    assert(subv3.size() == 2);
+    assert(subv3[0] == 2);
+    assert(subv3[1] == 3);
+
+    // remove all from middle
+    subv3.pop_back();
+    subv3.pop_back();
+    assert(subv3.size() == 0);
+
+    std::cout << "print list: sz=" << v.size() << std::endl;
+    for (auto& x : v) std::cout << x << std::endl;
+
+    std::cout << "print list: sz=" << subv1.size() << std::endl;
+    // subv1 is invalid now!
+    std::cout << "v1 is invalid! do not use!" << std::endl;
+
+    std::cout << "print list: sz=" << subv3.size() << std::endl;
+    for (auto& x : subv3) std::cout << x << std::endl;
+  }
+
+  // test Range
+
+  {
+    std::cout << "testing Range" << std::endl;
+    std::vector<int> v = {1, 2, 3, 4, 5, 6};
+    std::cout << "print list: sz=" << v.size() << std::endl;
+    for (auto& x : v) std::cout << x << std::endl;
+
+    Range<std::vector<int>> subv1(v);
+    assert(subv1->size() == v.size());
+    std::cout << "print list: sz=" << subv1->size() << std::endl;
+    for (auto& x : *subv1) std::cout << x << std::endl;
+  }
 
   return 0;
 }
