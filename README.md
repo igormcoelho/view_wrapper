@@ -1,5 +1,6 @@
 # view_wrapper
 A reasonably safe header-only C++20 library for view and range containers in C++, and also includes a C++14 implementation of a subvector.
+To quickly understand it, please read the blog post [Introducing subvector and view_wrapper for modern C++](https://igormcoelho.medium.com/introducing-subvector-and-view-wrapper-for-modern-c-2f21270f52b0).
 
 ## Do I need this library?
 
@@ -144,6 +145,10 @@ To build it, just type:
 - `cxxbuild . --c++20` (for all systems*)
 
 (*) install [cxxbuild](https://github.com/manydeps/cxxbuild) from `pip install cxxbuild` to automatically run and test with cmake or bazel.
+
+### Acknowledgements
+
+Thanks Fellipe Pessanha for the advices and improvements on the explanations and examples.
 
 ## License
 
