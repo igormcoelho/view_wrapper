@@ -52,7 +52,7 @@ This library assumes the following:
     * Dynamic bounds can be automatically executed before `size()` and push/pop write methods via constructor flags *refreshOnSize* and *refreshBeforePushPop*; or manually invoking `refresh()`
     * `subvector` is C++14 compatible, but works best with C++20 to allow `std::span` and range concepts
 - This library is header-only: just copy it into your project!
-- This project requires C++20 standard, so for C++17 alternative for simpler situations, see [Optional View project](https://github.com/igormcoelho/optional_view)
+- The View<> class requires C++20 standard, so for C++17 alternative for simpler situations, see [optional_view](https://github.com/igormcoelho/optional_view) project (equivalent to a general `View<T>` for pointers only)
 
 ## Demo
 
