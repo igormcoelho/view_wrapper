@@ -59,7 +59,51 @@ Just play with `View<std::string>`, `View<std::vector<int>>` and `Range<std::vec
 
 See `src/demo.cpp` and files [include/view_wrapper/View.hpp](./include/view_wrapper/View.hpp) and [include/view_wrapper/Range.hpp](./include/view_wrapper/Range.hpp).
 
-Also, play with subvector: [include/view_wrapper/subvector.hpp](./include/view_wrapper/subvector.hpp)
+### subvector example
+Remember to play with subvector: [include/view_wrapper/subvector.hpp](./include/view_wrapper/subvector.hpp)
+
+In this example, consider a printing function `void printv(subvector<int> v)`:
+
+```
+void printv(subvector<int> v) {
+  std::cout << "size=" << v.size() << ": ";
+  for (auto& x : v) std::cout << x << " ";
+  std::cout << std::endl;
+}
+```
+
+Then, we demonstrate three views:
+- `vv1`: whole view on vector `v`
+- `vv2`: first two elements of `v`
+- `vv3`: all elements after first `-1` element in `v`
+
+
+```
+std::vector<int> v = {1, 2, -1, 4, 5, 6};
+//
+subvector<int> vv1(v);
+printv(vv1);  // size=6: 1 2 -1 4 5 6
+subvector<int> vv2(v, 0, 2);
+printv(vv2);  // size=2: 1 2
+subvector<int> vv3(v, [](const std::vector<int>& v) {
+    auto it1 = std::find(v.begin(), v.end(), -1);
+    auto idx1 = std::distance(v.begin(), it1);
+    return std::make_pair(idx1 + 1, v.size());
+});
+printv(vv3);  // size=3: 4 5 6
+```
+
+Note how all the views react to the `vv2.push_back(3)`
+```
+vv2.push_back(3);
+printv(vv1);  // size=7: 1 2 3 -1 4 5 6
+printv(vv2);  // size=3: 1 2 3
+printv(vv3);  // size=3: 4 5 6
+```
+
+This demonstrates the fixed and dynamic bounds capabilities of `subvector`.
+
+### building
 
 To build it, just type:
 

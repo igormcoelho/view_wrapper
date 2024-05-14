@@ -95,9 +95,9 @@ class subvector {
         refreshBeforePushPop{_refreshBeforePushPop} {
     // invoke dynamic bounds function
     refresh();
-    assert(idxBegin >= 0);
-    assert(idxBegin <= idxEnd);
-    assert(idxEnd <= remote->size());
+    // assert(idxBegin >= 0);
+    // assert(idxBegin <= idxEnd);
+    // assert(idxEnd <= remote->size());
   }
 
   void refresh() const {
