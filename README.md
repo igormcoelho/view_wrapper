@@ -93,7 +93,7 @@ Remember to play with subvector: [include/view_wrapper/subvector.hpp](./include/
 
 In this example, consider a printing function `void printv(subvector<int> v)`:
 
-```
+```.cpp
 void printv(subvector<int> v) {
   std::cout << "size=" << v.size() << ": ";
   for (auto& x : v) std::cout << x << " ";
@@ -110,7 +110,7 @@ Then, we demonstrate four ranges:
 - `vv4`: four elements of `v`
 
 
-```
+```.cpp
 subvector<int> vv1(v);
 printv(vv1);  // size=6: 1 2 -1 4 5 6
 subvector<int> vv2(v, 0, 2);
@@ -126,7 +126,7 @@ printv(vv4);  // size=4: 2 -1 4 5
 ```
 
 Note how all the views react to `vv2.push_back(3)`:
-```
+```.cpp
 vv2.push_back(3);
 printv(vv1);  // size=7: 1 2 3 -1 4 5 6
 printv(vv2);  // size=3: 1 2 3
