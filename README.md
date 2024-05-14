@@ -59,6 +59,35 @@ Just play with `View<std::string>`, `View<std::vector<int>>` and `Range<std::vec
 
 See `src/demo.cpp` and files [include/view_wrapper/View.hpp](./include/view_wrapper/View.hpp) and [include/view_wrapper/Range.hpp](./include/view_wrapper/Range.hpp).
 
+### View example
+
+In this example, consider a printing function `void print_view(View<T> sv)`:
+
+```.cpp
+template <typename T>
+void print_view(View<T> sv) {
+  std::cout << "size=" << sv->size() << ": ";
+  for (auto& x : *sv) std::cout << x << ";";
+  std::cout << std::endl;
+}
+```
+
+Then, we can easily use View to transform `std::string` and `std::vector` into their corresponding views:
+
+```.cpp
+  // View<std::string> sv("abcd"); // ERROR: const lvalue&
+  std::string s = "abcd";
+  View<std::string> sv(s);
+  print_view(sv);                  // size=4: a;b;c;d;
+  std::vector<int> v = {1, 2, 3, 4};
+  View<std::vector<int>> vv(v);
+  print_view(vv);                  // size=4: 1;2;3;4;
+```
+
+View prevents creation with possibly dangling `const lvalue&`, 
+due to lifetime extensions, which is permitted in `std::string_view`.
+
+
 ### subvector example
 Remember to play with subvector: [include/view_wrapper/subvector.hpp](./include/view_wrapper/subvector.hpp)
 

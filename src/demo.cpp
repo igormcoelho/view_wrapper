@@ -34,9 +34,24 @@ View<std::string> g(View<std::string>& v) {
   return v;  // ERROR, unless std::copyable
 }
 
-int main(int argc, char* argv[]) {
-  //
+template <typename T>
+void print_view(View<T> sv) {
+  std::cout << "size=" << sv->size() << ": ";
+  for (auto& x : *sv) std::cout << x << ";";
+  std::cout << std::endl;
+}
 
+void do_test() {
+  // View<std::string> sv("abcd"); // ERROR: const lvalue&
+  std::string s = "abcd";
+  View<std::string> sv(s);
+  print_view(sv);
+  std::vector<int> v = {1, 2, 3, 4};
+  View<std::vector<int>> vv(v);
+  print_view(vv);
+}
+
+int main(int argc, char* argv[]) {
   std::string realstr("101");
   View<std::string> v{realstr};
   // auto v = View<std::string>::from(std::string("10"));
@@ -223,6 +238,10 @@ int main(int argc, char* argv[]) {
       for (auto& v : vv2) std::cout << "size v -> " << v.size() << std::endl;
     }
   }
+
+  //
+  do_test();
+  //
 
   return 0;
 }
