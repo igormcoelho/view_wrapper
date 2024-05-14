@@ -18,6 +18,12 @@ void printv(subvector<int> v) {
 void simple_test() {
   std::vector<int> v = {1, 2, -1, 4, 5, 6};
   //
+  // subvector<int> vv(v);
+  // vv.push_back(-2);
+  // printv(vv);  // size=7: 1 2 -1 4 5 6 -2
+  //
+  subvector<int> vv0(v, 0, 2);
+  printv(vv0);  // size=6: 1 2 -1 4 5 6
   subvector<int> vv1(v);
   printv(vv1);  // sz=6: 1 2 -1 4 5 6
   subvector<int> vv2(v, 0, 2);

@@ -1,5 +1,5 @@
 # view_wrapper
-A reasonably safe header-only C++20 library for view and range containers in C++
+A reasonably safe header-only C++20 library for view and range containers in C++, and also includes a C++14 implementation of a subvector.
 
 ## Do I need this library?
 
