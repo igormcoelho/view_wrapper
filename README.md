@@ -74,10 +74,11 @@ void printv(subvector<int> v) {
 
 Consider a vector with 6 elements: `std::vector<int> v = {1, 2, -1, 4, 5, 6};`
 
-Then, we demonstrate three views:
+Then, we demonstrate four ranges:
 - `vv1`: whole view on vector `v`
 - `vv2`: first two elements of `v`
 - `vv3`: all elements after first `-1` element in `v`
+- `vv4`: four elements of `v`
 
 
 ```
@@ -91,17 +92,20 @@ subvector<int> vv3(v, [](const std::vector<int>& v) {
     return std::make_pair(idx1 + 1, v.size());
 });
 printv(vv3);  // size=3: 4 5 6
+subvector<int> vv4(v, 1, 5);
+printv(vv4);  // size=4: 2 -1 4 5
 ```
 
-Note how all the views react to the `vv2.push_back(3)`
+Note how all the views react to `vv2.push_back(3)`:
 ```
 vv2.push_back(3);
 printv(vv1);  // size=7: 1 2 3 -1 4 5 6
 printv(vv2);  // size=3: 1 2 3
 printv(vv3);  // size=3: 4 5 6
+printv(vv4);  // size=4: 2 3 -1 4
 ```
 
-This demonstrates the fixed and dynamic bounds capabilities of `subvector`.
+This demonstrates the fixed and dynamic bound capabilities of `subvector`.
 
 ### building
 

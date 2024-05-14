@@ -28,10 +28,14 @@ void simple_test() {
     return std::make_pair(idx1 + 1, v.size());
   });
   printv(vv3);  // sz=3: 4 5 6
+  subvector<int> vv4(v, 1, 5);
+  printv(vv4);  // size=4: 2 -1 4 5
+  //
   vv2.push_back(3);
   printv(vv1);  // sz=7: 1 2 3 -1 4 5 6
   printv(vv2);  // sz=3: 1 2 3
   printv(vv3);  // sz=3: 4 5 6
+  printv(vv4);  // size=4: 2 3 -1 4
 }
 
 int main() {
