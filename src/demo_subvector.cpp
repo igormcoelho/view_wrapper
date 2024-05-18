@@ -42,6 +42,9 @@ void simple_test() {
   printv(vv2);  // sz=3: 1 2 3
   printv(vv3);  // sz=3: 4 5 6
   printv(vv4);  // size=4: 2 3 -1 4
+  //
+  auto vc = vv4.as_copy();
+  printv(subvector<int>(vc));  // size=4: 2 3 -1 4
 }
 
 int main() {

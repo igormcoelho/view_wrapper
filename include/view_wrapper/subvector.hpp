@@ -114,6 +114,11 @@ class subvector {
   }
 #endif
 
+  std::vector<T, A> as_copy() {
+    return std::vector<T, A>(remote->begin() + idxBegin,
+                             remote->begin() + idxEnd);
+  }
+
   size_type size() const {
     if (refreshOnSize) refresh();
     return idxEnd - idxBegin;
