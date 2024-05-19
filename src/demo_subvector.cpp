@@ -15,6 +15,8 @@ void printv(subvector<int> v) {
   std::cout << std::endl;
 }
 
+#include <valarray>
+
 void simple_test() {
   std::vector<int> v = {1, 2, -1, 4, 5, 6};
   //
@@ -45,6 +47,16 @@ void simple_test() {
   //
   auto vc = vv4.as_copy();
   printv(subvector<int>(vc));  // size=4: 2 3 -1 4
+  //
+  auto vv5 = vv4.slice(1, 3);
+  printv(vv5);  // size=2: 3 -1
+  // playing with valarray... TODO: is it worth integrating too?
+  std::valarray<int> val1 = {1, 2, 3};
+  std::valarray<int> val2 = {3, 2, 1};
+  auto val3 = val1 + val2;
+  std::cout << val3[0] << val3[1] << val3[2] << std::endl;
+  auto vb = (val1 < val2);
+  std::cout << vb[0] << vb[1] << vb[2] << std::endl;
 }
 
 int main() {

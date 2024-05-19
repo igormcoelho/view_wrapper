@@ -119,6 +119,12 @@ class subvector {
                              remote->begin() + idxEnd);
   }
 
+  // slice subvector into [a,b)
+  subvector<T, A> slice(size_type a, size_type b) const {
+    subvector<T, A> v2(*remote, idxBegin + a, idxBegin + b);
+    return v2;
+  }
+
   size_type size() const {
     if (refreshOnSize) refresh();
     return idxEnd - idxBegin;

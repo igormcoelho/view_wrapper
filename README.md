@@ -138,6 +138,13 @@ printv(vv4);  // size=4: 2 3 -1 4
 
 This demonstrates the fixed and dynamic bound capabilities of `subvector`.
 
+Another useful method is `slice(a,b)`, that slices even further the subvector into `[a,b)`:
+
+```.cpp
+auto vv5 = vv4.slice(1, 3);
+printv(vv5);  // size=2: 3 -1
+```
+
 ### building
 
 To build it, just type:
