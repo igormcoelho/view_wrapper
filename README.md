@@ -145,6 +145,9 @@ auto vv5 = vv4.slice(1, 3);
 printv(vv5);  // size=2: 3 -1
 ```
 
+For the moment, slices are only taken as *fixed* intervals, but they could be made dynamic,
+if there are use cases for that.
+
 ### building
 
 To build it, just type:
